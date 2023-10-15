@@ -1,44 +1,46 @@
 @font-face {
     font-family: dos;
-    src: url(../fonts/Perfect\ DOS\ VGA\ 437\ Win.ttf);
+    src: url(../fonts/Merriweather-Regular.ttf);
 }
 body{
-    background-image: url(../images/background.jpg);
-    background-size: cover;
+    background-color: black;
     font-family: dos;
 }
 .menu{
     background-color: black;
-    margin-top: 2%;
-    margin-right: 60%;
+    padding: 20%;
     color: rgb(255, 131, 152);
     padding: 1%;
     border-radius: 10px;
     border-style: double;
-}
-.options{
-    background-color: black;
-    margin-top: 1%;
-    margin-right: 84%;
-    color: rgb(255, 131, 152);
-    padding: 1%;
-    border-radius: 10px;
-    border-style: double;
-    position:cover;
     text-align: center;
-}
-.userUpdate{
-    background-color: black;
-    margin-top: 1%;
-    margin-right: 60%;
-    color: rgb(255, 131, 152);
-    padding: 1%;
-    border-radius: 10px;
-    border-style: double;
-    position:cover;
-    text-align: center; 
 }
 a{
     color: rgb(255, 131, 152);
-    font-size: 20px;
+}
+.color-changing-text {
+    font-size: 36px;
+    animation: colorChange 5s infinite alternate;
+  }
+  
+  @keyframes colorChange {
+    0% {
+      color: red;
+    }
+    25% {
+      color: blue;
+    }
+    50% {
+      color: green;
+    }
+    75% {
+      color: orange;
+    }
+    100% {
+      color: purple;
+    }
+  }
+footer{
+    color: rgb(255, 131, 152);
+    text-align: center;
 }
