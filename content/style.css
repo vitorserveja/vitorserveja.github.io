@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'SF';
+    font-family: SF;
+    src: url("SFPRODISPLAYMEDIUM.OTF");
+}
+a{
+    color: #333;
+    text-decoration: none;
+}
+button {
+    background: linear-gradient(180deg,	#808080, #808080); /* Efeito sutil de profundidade */
+    color: #333; /* Cor do texto */
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px; /* Bordas levemente arredondadas */
+    box-shadow: 0 4px 6px #d79921; /* Sombra leve */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background: linear-gradient(180deg, #eaeaea, #d6d6d6);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Aumenta a sombra */
+    transform: scale(1.02); /* Cresce um pouco ao passar o mouse */
+}
+
+button:active {
+    background: linear-gradient(180deg, #d6d6d6, #c2c2c2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra menor ao clicar */
+    transform: scale(0.98); /* Dá um efeito de clique */
+}
+h2{
+    text-align: center;
+    padding-top: 1%;
+    padding-bottom: 4%;
+}
+body{
+    font-family: SF;
+    background-color: #3c3836;
+    color: #d79921;
+}
+footer{
+    text-align: center;
+    padding-top: 15%;
+}
