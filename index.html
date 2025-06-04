@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sailor Moon Memory Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .start-screen {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: transparent;
+      z-index: 2;
+    }
+
+    .start-screen h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 4em;
+      color: rgb(255, 210, 10);
+      margin-bottom: 20px;
+    }
+
+    .start-screen button {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .game-board {
+      display: none;
+      flex-wrap: wrap;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .card {
+      width: 100px;
+      height: 100px;
+      perspective: 1000px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .card img, .card-back {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 0.5s;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+    }
+
+    .card-back {
+      background: rgba(99, 98, 95, 0.562);
+    }
+
+    .card.flipped .card-front {
+      transform: rotateY(0deg);
+    }
+
+    .card.flipped .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .card.matched {
+      animation: pulse 0.6s ease forwards;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    @keyframes spiral {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(200px, -200px) rotate(720deg) scale(0);
+        opacity: 0;
+      }
+    }
+
+    .card.spiral-out {
+      animation: spiral 1.5s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="background" id="background"></div>
+
+  <div class="start-screen" id="startScreen">
+    <h1>Sailor Moon</h1>
+    <button onclick="startGame()">Iniciar Jogo</button>
+  </div>
+
+  <div class="game-board" id="gameBoard"></div>
+
+  <script>
+    function generateStars(count) {
+      const bg = document.getElementById('background');
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${Math.random() * 3 + 1}s`;
+        bg.appendChild(star);
+      }
+    }
+
+    generateStars(150);
+
+    const images = [
+      "6f38eb51-1d63-4ecf-99b7-913777c7f810.jpeg",
+      "1485e044-0701-4d2c-b8b3-e917eed1a9ee.jpeg",
+      "2788018d-40f9-48b7-99aa-c9da5cc147b7.jpeg",
+      "ba1bfe5f-8207-401c-aa6c-36c5a10f7a3d.jpeg",
+      "cddf2454-72a4-4e8f-87c3-ee7c5c62893c.jpeg",
+      "e0f07d9e-79f6-4df1-9986-68ea2de9c8df.jpeg"
+    ];
+
+    let firstCard = null;
+    let secondCard = null;
+    let lock = false;
+
+    function startGame() {
+      document.getElementById('startScreen').style.display = 'none';
+      const board = document.getElementById('gameBoard');
+      board.style.display = 'flex';
+      const pairs = [...images, ...images].sort(() => Math.random() - 0.5);
+      board.innerHTML = '';
+
+      pairs.forEach(src => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        const front = document.createElement('img');
+        front.classList.add('card-front');
+        front.src = src;
+
+        const back = document.createElement('div');
+        back.classList.add('card-back');
+
+        card.appendChild(front);
+        card.appendChild(back);
+
+        card.addEventListener('click', () => flipCard(card));
+        board.appendChild(card);
+      });
+    }
+
+    function flipCard(card) {
+      if (lock || card === firstCard || card.classList.contains('matched')) return;
+
+      card.classList.add('flipped');
+
+      if (!firstCard) {
+        firstCard = card;
+        return;
+      }
+
+      secondCard = card;
+      lock = true;
+
+      const img1 = firstCard.querySelector('img').src;
+      const img2 = secondCard.querySelector('img').src;
+
+      if (img1 === img2) {
+        setTimeout(() => {
+          firstCard.classList.add('matched');
+          secondCard.classList.add('matched');
+          firstCard = null;
+          secondCard = null;
+          lock = false;
+          checkEndGame();
+        }, 500);
+      } else {
+        setTimeout(() => {
+          firstCard.classList.remove('flipped');
+          secondCard.classList.remove('flipped');
+          firstCard = null;
+          secondCard = null;
+          lock = false;
+        }, 1000);
+      }
+    }
+
+    function checkEndGame() {
+      const matchedCards = document.querySelectorAll('.card.matched');
+      if (matchedCards.length === images.length * 2) {
+        setTimeout(spiralOutAndRestart, 1000);
+      }
+    }
+
+    function spiralOutAndRestart() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.add('spiral-out');
+        }, i * 100);
+      });
+
+      setTimeout(() => {
+        startGame();
+      }, cards.length * 100 + 2000);
+    }
+  </script>
+</body>
+</html>
